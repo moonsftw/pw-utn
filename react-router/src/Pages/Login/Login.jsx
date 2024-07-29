@@ -16,33 +16,40 @@ const Login = () => {
 
     const ERRORS_DICT = {
         USERNAME_LENGTH: {
-            text: 'Tu nombre de usuario debe tener al menos 3 caracteres',
+            text: 'usuario debe tener al menos 3 caracteres',
             id: 1,
         }
     }
     const validateLength = (value, length) => {
-        return value > length
+        return value >= length;
     }
 
     const validateUsernameLength = (value) => {
-        validateLength(value, 3)
+        return validateLength(value, 3)
     }
 
     const findError = (from, idError) => {
         return errors[from].find(error => error.id === idError)
     }
     const handleAbortInput = () => {
-        if(validateUsernameLength(loginForm.username.length)){
-
-        }
+      /*   if(!validateUsernameLength(loginForm.username.length) && !findError('username', ERRORS_DICT.USERNAME_LENGTH.id)){
+            setErrors({...errors, username: [...errors.username, ERRORS_DICT.USERNAME_LENGTH]})
+            console.log(errors)
+        } else {
+            const newUsernameErrors = errors.username.filter(error => error.id !== ERRORS_DICT.USERNAME_LENGTH.id);
+            setErrors({...errors, username: newUsernameErrors});
+        } */
 
         if(findError('username', ERRORS_DICT.USERNAME_LENGTH.id)){
-
-            setErrors({...errors, username: [...errors.username, ERRORS_DICT.USERNAME_LENGTH]})
+            if(validateUsernameLength(loginForm.username.length)){
+                const newUsernameErrors = errors.username.filter(error => error.id !== ERRORS_DICT.USERNAME_LENGTH.id);
+                setErrors({...errors, username: newUsernameErrors});
+            }
+        } else {
+            if(!validateUsernameLength(loginForm.username.length)){
+                setErrors({...errors, username: [...errors.username, ERRORS_DICT.USERNAME_LENGTH]})
+            }
         }
-       
-        
-       
     }
     return (
         <main>
@@ -55,7 +62,7 @@ const Login = () => {
                         errors.username.length > 0 &&
                         errors.username.map((error, index) => {
                             return (
-                                <span key={index}>{error.text}</span>
+                                <span key={index} style={{ color: 'red' }}>{error.text}</span>
                             )
                         })
                     }
