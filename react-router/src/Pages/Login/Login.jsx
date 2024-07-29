@@ -14,12 +14,7 @@ const Login = () => {
         setLoginForm({ ...loginForm, [e.target.name]: e.target.value })
     }
 
-    const ERRORS_DICT = {
-        USERNAME_LENGTH: {
-            text: 'usuario debe tener al menos 3 caracteres',
-            id: 1,
-        }
-    }
+   
     const validateLength = (value, length) => {
         return value >= length;
     }
@@ -31,7 +26,28 @@ const Login = () => {
     const findError = (from, idError) => {
         return errors[from].find(error => error.id === idError)
     }
-    const handleAbortInput = () => {
+    const ERRORS_DICT = {
+        USERNAME_LENGTH: {
+            text: 'usuario debe tener al menos 3 caracteres',
+            id: 1,
+            validate: validateUsernameLength, 
+        }
+    }
+
+    const validateError = (from , errorToValidate) => {
+        if(findError(from, errorToValidate.id)){
+            if(errorToValidate.validate(loginForm[from].length)){
+                const newErrors = errors[from].filter(error => error.id !== errorToValidate.id);
+                setErrors({...errors, [from]: newErrors});
+            }
+        } else {
+            if(!errorToValidate.validate(loginForm[from].length)){
+                setErrors({...errors, [from]: [...errors[from], errorToValidate]})
+            }
+        }
+    }
+
+    const handleBlurInput = () => {
       /*   if(!validateUsernameLength(loginForm.username.length) && !findError('username', ERRORS_DICT.USERNAME_LENGTH.id)){
             setErrors({...errors, username: [...errors.username, ERRORS_DICT.USERNAME_LENGTH]})
             console.log(errors)
@@ -40,7 +56,7 @@ const Login = () => {
             setErrors({...errors, username: newUsernameErrors});
         } */
 
-        if(findError('username', ERRORS_DICT.USERNAME_LENGTH.id)){
+        /* if(findError('username', ERRORS_DICT.USERNAME_LENGTH.id)){
             if(validateUsernameLength(loginForm.username.length)){
                 const newUsernameErrors = errors.username.filter(error => error.id !== ERRORS_DICT.USERNAME_LENGTH.id);
                 setErrors({...errors, username: newUsernameErrors});
@@ -49,20 +65,22 @@ const Login = () => {
             if(!validateUsernameLength(loginForm.username.length)){
                 setErrors({...errors, username: [...errors.username, ERRORS_DICT.USERNAME_LENGTH]})
             }
-        }
+        } */
+       validateError('username', ERRORS_DICT.USERNAME_LENGTH)
     }
+   
     return (
         <main>
             <h1>Iniciar Sesión</h1>
             <form action="">
                 <div style={{ display: "flex", flexDirection: "column", marginBottom: '10px', gap: '10px' }}>
                     <label htmlFor="username">Nombre de usuario</label>
-                    <input id="username" type="text" placeholder="Joe Dow" name="username" onChange={handleChangeValue} onBlur={handleAbortInput} value={loginForm.username} />
+                    <input id="username" type="text" placeholder="Joe Dow" name="username" onChange={handleChangeValue} onBlur={handleBlurInput} value={loginForm.username} />
                     {
                         errors.username.length > 0 &&
-                        errors.username.map((error, index) => {
+                        errors.username.map((error) => {
                             return (
-                                <span key={index} style={{ color: 'red' }}>{error.text}</span>
+                                <span key={error.id} style={{ color: 'red' }}>{error.text}</span>
                             )
                         })
                     }
