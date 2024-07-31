@@ -12,8 +12,22 @@ export const GlobalContextProvider = ({ children }) => {
         setProductos(eliminarProductoPorIdFilter(id));
         navigation('/')
       }
-  return <GlobalContext.Provider value={{ productos: productos, handleDeleteProduct: handleDeleteProduct}}>{children}</GlobalContext.Provider>;
-};
 
+    const handleCreateProducto = (e) => {
+      e.preventDefault();
+      console.log('Producto creado')
+    }
+  return (
+      <GlobalContext.Provider value={
+        { 
+          productos: productos, 
+          handleDeleteProduct: handleDeleteProduct,
+          handleCreateProducto: handleCreateProducto,
+        }
+      }>
+          {children}
+      </GlobalContext.Provider>
+)
+}
 
 export const useGlobalContext = () => useContext(GlobalContext);

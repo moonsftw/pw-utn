@@ -8,29 +8,34 @@ import { useGlobalContext } from "../../Context/GlobalContext";
 
 const Detail = () => {
   const { producto_id } = useParams();
-  const {handleDeleteProduct} = useGlobalContext();
-
+  const { handleDeleteProduct } = useGlobalContext();
+  const user = JSON.parse(localStorage.getItem("user"));
   const { nombre, descripcion, precio, id } =
     obtenerProductoPorIdLocal(producto_id);
 
- 
   return (
     <>
       <section>
         <h1>{nombre}</h1>
-        <p>{descripcion}</p>
-        <span style={{ marginRight: "20px" }}> ${precio}</span>
-        <button
-          id="btnELiminarProducto"
-          onClick={() => handleDeleteProduct(id)}
-          style={{ marginRight: "20px", marginBottom: "20px" }}
-        >
-         Eliminar
-        </button>
+        <div style={{ paddingBottom: "20px" }}>
+          <p>{descripcion}</p>
+          <span > ${precio}</span>
+        </div>
+
+        {user.role === "admin" && (
+          <button
+            id="btnELiminarProducto"
+            onClick={() => handleDeleteProduct(id)}
+            style={{ marginRight: "20px", marginBottom: "20px" }}
+          >
+            Eliminar
+          </button>
+        )}
+        <Link to={"/"} className="btnLink">
+          Go Back
+        </Link>
       </section>
-      <section>
-        <Link to={"/"} className="btnLink">Go Back</Link>
-      </section>
+      
     </>
   );
 };

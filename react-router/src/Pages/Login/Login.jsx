@@ -1,11 +1,14 @@
 import React from "react";
 import { useState } from "react";
+import { users } from "../../Data/usersData";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const initialState = { username: '', password: '', }
     const errorsInitialState = {
         username: [],
         password: [],
+        global: [], 
     }
     const [loginForm, setLoginForm] = useState(initialState);
     const [ errors, setErrors] = useState(errorsInitialState);
@@ -31,6 +34,10 @@ const Login = () => {
             text: 'usuario debe tener al menos 3 caracteres',
             id: 1,
             validate: validateUsernameLength, 
+        },
+        USER_NOT_FOUND: {
+            text: 'usuario no encontrado',
+            id: 2,
         }
     }
 
@@ -68,11 +75,25 @@ const Login = () => {
         } */
        validateError('username', ERRORS_DICT.USERNAME_LENGTH)
     }
+
+    const navigate = useNavigate();        
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        //acá podríamos validar los errores.
+        for(const user of users){
+            if(user.username === loginForm.username){
+                localStorage.setItem('user', JSON.stringify(user));
+                return navigate('/')
+            }
+        }
+        setErrors({...errors, global: [ERRORS_DICT.USER_NOT_FOUND]})
+    }
    
     return (
         <main>
             <h1>Iniciar Sesión</h1>
-            <form action="">
+            <form onSubmit={handleLogin}>
                 <div style={{ display: "flex", flexDirection: "column", marginBottom: '10px', gap: '10px' }}>
                     <label htmlFor="username">Nombre de usuario</label>
                     <input id="username" type="text" placeholder="Joe Dow" name="username" onChange={handleChangeValue} onBlur={handleBlurInput} value={loginForm.username} />
@@ -89,6 +110,16 @@ const Login = () => {
                     <label htmlFor="password">Contraseña: </label>
                     <input id="password" type="password" name="password" onChange={handleChangeValue} value={loginForm.password} />
                 </div>
+                {
+                    
+                    errors.global.length > 0 && 
+                    errors.global.map((error) => {
+                        return (
+                            <span key={error.id} style={{ color: 'red' }}>{error.text}</span>
+                        )
+                    }
+                    )
+                }
                 <button type="submit" style={{ marginTop: '10px' }}>Enviar</button>
             </form>
         </main>

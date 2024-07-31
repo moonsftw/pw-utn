@@ -6,6 +6,7 @@ import { useGlobalContext } from "../../Context/GlobalContext";
 
 const Home = () => {
   const {productos} = useGlobalContext();
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const nuevoProducto = {
     nombre: "Nueva laptop",
@@ -20,9 +21,13 @@ const Home = () => {
 
   return (
     <div>
+     
       <h1>Conoce nuestros productos</h1>
       <ProductList productos={productos} />
-      <Link to="/product/new" className="btnLink">Nuevo Producto</Link>
+      
+      {
+        user.role === "admin" && <Link to="/product/new" className="btnLink">Nuevo Producto</Link>
+      }
     </div>
   );
 };

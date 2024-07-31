@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
-import { Cart, Detail, Home, Login, New } from "./Pages";
+import { Cart, Detail, Home, Login, New, NotFound404 } from "./Pages";
 import "./App.css";
+
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       <Route path="/detail/:producto_id" element={<Detail />} /> {/* /:producto_id es un parámetro de búsqueda, nos permite pasar valores por ruta */}
       <Route path="/cart" element={<Cart />} />
       <Route path="/product/new" element={<New />} />
+      <Route path="/*" element={<NotFound404 />} />
     </Routes>
   );
 }
