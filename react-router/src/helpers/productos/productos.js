@@ -1,7 +1,7 @@
 import { productos } from "../../Data/productsData";
 
 export const obtenerProductoPorId = (id) => {
-  return productos.find((producto) => Number(producto.id) === Number(id));
+  return productos.find((producto) => producto.id === id);
 };
 
 const guardarLocal = (productos) => {
@@ -28,7 +28,7 @@ export const obtenerProductos = () => {
 export const crearProducto = (producto) => {
   const productos = obtenerProductos();
   const producto_encontrado = productos.find(
-    (producto_buscado) => Number(producto.id) === Number(producto_buscado.id)
+    (producto_buscado) => producto.id === producto_buscado.id
   );
   if (!producto_encontrado) {
     productos.push(producto);
@@ -40,7 +40,7 @@ export const crearProducto = (producto) => {
 
 export const obtenerProductoPorIdLocal = (id) => {
   const productos = obtenerProductos();
-  return productos.find((producto) => Number(producto.id) === Number(id));
+  return productos.find((producto) => producto.id === id);
 };
 
 /* eliminarProductoPorId(id) eliminar el producto que cumpla con esa id */
